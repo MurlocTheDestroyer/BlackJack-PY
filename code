@@ -1,0 +1,80 @@
+import random
+import os
+def NewGame():
+    def Start():
+        def hit():
+            myhand.append(remainingDeck[random.randrange(0,len(remainingDeck))])
+            os.system('cls')
+            print('Opponents Hand:',dealerhand[0],' ? ')
+            print('Your Hand:',myhand,'Current Total:', calculate(myhand))
+        #This function will call the calculate function which will return the values to determine if there is a winner and who is the winnner based off of the rules that are put into the if and elif statements
+        def stand():
+            os.system('cls')
+            print('Opponents Hand:',dealerhand,'Opponents Total:', calculate(dealerhand))
+            print('Your Hand:',myhand,'Your Total:', calculate(myhand))
+            if calculate(dealerhand) == calculate(myhand):
+                print('It\'s a Push. No Winner!')
+            elif calculate(dealerhand) > calculate(myhand) or calculate(dealerhand) == 21:
+                print('You Lose!')
+            elif calculate(dealerhand)>21:
+                print('Opponent Bust! You Win!')
+            elif calculate(myhand)>21:
+                print('You Bust!')
+            else:
+                print('You Win!')
+            Replay()
+            
+        #This function will calculate both of the hands to determine their values by what cards they have 
+        def calculate(hand):
+            Total = 0
+            
+            for card in hand:
+                card_value = card[:2]
+                if card_value in 'A ':
+                    card_value = 11
+                elif card_value in ['K ', 'Q ', 'J ']:
+                    card_value = 10
+                else:
+                    card_value = int(card_value)
+                Total += card_value
+            
+            if 'A' in hand and Total < 21:
+                Total -= 10
+
+            return Total
+
+        #This will generate both the dealers hand and the users hand 
+        deck = ['A spade','A club','A diamond','A heart','2 spade','2 club','2 diamond','2 heart','3 spade','3 club','3 diamond','3 heart','4 spade','4 club','4 diamond','4 heart','5 spade','5 club','5 diamond','5 heart','6 spade','6 club','6 diamond','6 heart','7 spade','7 club','7 diamond','7 heart','8 spade','8 club','8 diamond','8 heart','9 spade','9 club','9 diamond','9 heart','10 spade','10 club','10 diamond','10 heart','J spade','J club','J diamond','J heart','Q spade','Q club','Q diamond','Q heart','K spade','K club','K diamond','K heart']
+        dealerhand= [deck[random.randrange(0,51)],deck[random.randrange(0,51)]]
+        StartingDeck=[x for x in deck if x not in dealerhand]
+        myhand = [StartingDeck[random.randrange(0,49)],StartingDeck[random.randrange(0,49)]]
+
+        #The code below will show the user their hand as well as the first card in the dealers hand and ask the user if they would like to hit or stand
+        #If the user chooses hit then they will draw a card and the game will continue but if the users hand is above 21 then they will automatically stand and will presetned with the corresponding message
+        print('Opponents Hand:',dealerhand[0],' ? ')
+        print('Your Hand:',myhand,'Current Total:', calculate(myhand))
+
+        while calculate(myhand)<21 and calculate(dealerhand)<21:
+            remainingDeck=[y for y in StartingDeck if y not in myhand ]
+            u=input('Would you like to Hit or Stand? ').lower()
+            if u == 'hit':
+                hit()
+            elif u == 'stand':
+                break
+            else:
+                print('Please type "Hit" or "Stand" to make a selection')
+                continue
+        stand()
+    #This function will appear once the intial game is done and will ask the player if they want to play again.If the player yes then it will clear the screen and then load up a new game.
+    def Replay():
+        W=input('Try Again? Y/N: ').lower()
+        if W == 'y':
+            os.system('cls')
+            Start()
+        elif W == 'n':
+            print('Ok, Bye!')
+        else:
+            os.system('cls')
+            Replay()
+    Start()
+NewGame()
